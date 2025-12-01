@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\SMS\SmsService;
+use App\Services\SMS\SmsServiceInterface;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -28,5 +30,7 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+        $this->app->singleton(SmsServiceInterface::class, SmsService::class);
     }
 }
