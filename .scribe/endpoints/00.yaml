@@ -1,0 +1,630 @@
+name: Auth
+description: ''
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/register
+    metadata:
+      custom: []
+      groupName: Auth
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Đăng ký tài khoản'
+      description: |-
+        Đăng ký tài khoản mới bằng số điện thoại và mật khẩu.
+        Sau khi đăng ký, hệ thống sẽ gửi mã OTP đến số điện thoại để xác thực.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      identifier:
+        custom: []
+        name: identifier
+        description: 'số điện thoại hoặc email của người dùng. Ví dụ: 0901234567 hoặc test@gmail.com'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: 'Mật khẩu. Tối thiểu 6 ký tự. Ví dụ: password123'
+        required: true
+        example: '|]|{+-'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      password_confirmation:
+        custom: []
+        name: password_confirmation
+        description: 'Nhập lại mật khẩu. Phải trùng với password.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      identifier: architecto
+      password: '|]|{+-'
+      password_confirmation: architecto
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "message": "Đăng ký thành công, vui lòng nhập mã OTP được gửi qua SMS để xác thực số điện thoại.",
+            "identifier": "0901234567"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The given data was invalid.",
+            "errors": {
+              "identifier": [
+                "The email has already been taken."
+              ],
+              "password": [
+                "The password confirmation does not match."
+              ]
+            }
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/verify-otp
+    metadata:
+      custom: []
+      groupName: Auth
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Xác thực OTP'
+      description: |-
+        Xác thực mã OTP đã gửi tới số điện thoại sau khi đăng ký.
+        Nếu mã hợp lệ, số điện thoại sẽ được đánh dấu đã xác thực và hệ thống trả về token đăng nhập.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      phone:
+        custom: []
+        name: phone
+        description: 'Số điện thoại đã đăng ký. Ví dụ: 0901234567'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      code:
+        custom: []
+        name: code
+        description: 'Mã OTP gồm 6 chữ số. Ví dụ: 123456'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      phone: architecto
+      code: architecto
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Xác thực thành công.",
+            "token": "1|fFsgvbKc3P3xxxxxxxxxxxxxxxxxxxxx",
+            "user": {
+              "id": 1,
+              "name": "Nguyen Van A",
+              "phone": "0901234567",
+              "phone_verified_at": "2025-01-01T12:00:00.000000Z",
+              "created_at": "2025-01-01T11:00:00.000000Z",
+              "updated_at": "2025-01-01T11:00:00.000000Z"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The given data was invalid.",
+            "errors": {
+              "code": [
+                "Mã OTP không chính xác."
+              ]
+            }
+          }
+        headers: []
+        description: 'Mã OTP sai'
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The given data was invalid.",
+            "errors": {
+              "code": [
+                "Mã đã được sử dụng hoặc đã hết hạn."
+              ]
+            }
+          }
+        headers: []
+        description: 'Mã OTP hết hạn hoặc đã dùng'
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The given data was invalid.",
+            "errors": {
+              "code": [
+                "Bạn đã vượt quá số lần nhập mã cho phép."
+              ]
+            }
+          }
+        headers: []
+        description: 'Vượt quá số lần nhập mã'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/resend-otp
+    metadata:
+      custom: []
+      groupName: Auth
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Gửi lại mã OTP'
+      description: |-
+        Gửi lại mã OTP cho số điện thoại đã đăng ký.
+        Có giới hạn thời gian giữa các lần gửi (VD: 60 giây).
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      phone:
+        custom: []
+        name: phone
+        description: 'Số điện thoại đã đăng ký. Ví dụ: 0901234567'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      phone: architecto
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Đã gửi lại mã OTP.",
+            "phone": "0901234567"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The given data was invalid.",
+            "errors": {
+              "phone": [
+                "Vui lòng đợi 30 giây nữa trước khi yêu cầu mã mới."
+              ]
+            }
+          }
+        headers: []
+        description: 'Gửi lại quá sớm'
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The given data was invalid.",
+            "errors": {
+              "phone": [
+                "The selected phone is invalid."
+              ]
+            }
+          }
+        headers: []
+        description: 'Số điện thoại không tồn tại'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/login
+    metadata:
+      custom: []
+      groupName: Auth
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Đăng nhập'
+      description: |-
+        Đăng nhập bằng số điện thoại và mật khẩu.
+        Trả về Bearer Token (Sanctum) để dùng cho các API cần auth.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      phone:
+        custom: []
+        name: phone
+        description: 'Số điện thoại đã đăng ký. Ví dụ: 0901234567'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: 'Mật khẩu. Ví dụ: password123'
+        required: true
+        example: '|]|{+-'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      phone: architecto
+      password: '|]|{+-'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Đăng nhập thành công.",
+            "token": "1|fFsgvbKc3P3xxxxxxxxxxxxxxxxxxxxx",
+            "user": {
+              "id": 1,
+              "name": "Nguyen Van A",
+              "phone": "0901234567",
+              "phone_verified_at": "2025-01-01T12:00:00.000000Z",
+              "created_at": "2025-01-01T11:00:00.000000Z",
+              "updated_at": "2025-01-01T11:00:00.000000Z"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The given data was invalid.",
+            "errors": {
+              "phone": [
+                "Thông tin đăng nhập không chính xác."
+              ]
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The given data was invalid.",
+            "errors": {
+              "phone": [
+                "Số điện thoại chưa được xác thực."
+              ]
+            }
+          }
+        headers: []
+        description: 'Chưa verify số điện thoại'
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/me
+    metadata:
+      custom: []
+      groupName: Auth
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Thông tin user hiện tại'
+      description: 'Lấy thông tin user tương ứng với Bearer token đang sử dụng.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "name": "Nguyen Van A",
+            "phone": "0901234567",
+            "phone_verified_at": "2025-01-01T12:00:00.000000Z",
+            "created_at": "2025-01-01T11:00:00.000000Z",
+            "updated_at": "2025-01-01T11:00:00.000000Z"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/change-password
+    metadata:
+      custom: []
+      groupName: Auth
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Đổi mật khẩu'
+      description: 'Đổi mật khẩu cho user đang đăng nhập.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      current_password:
+        custom: []
+        name: current_password
+        description: 'Mật khẩu hiện tại. Ví dụ: oldpass123'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      new_password:
+        custom: []
+        name: new_password
+        description: 'Mật khẩu mới. Tối thiểu 6 ký tự. Ví dụ: newpass123'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      new_password_confirmation:
+        custom: []
+        name: new_password_confirmation
+        description: 'Nhập lại mật khẩu mới. Phải trùng với new_password.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      current_password: architecto
+      new_password: architecto
+      new_password_confirmation: architecto
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Đổi mật khẩu thành công."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The given data was invalid.",
+            "errors": {
+              "current_password": [
+                "Mật khẩu hiện tại không đúng."
+              ]
+            }
+          }
+        headers: []
+        description: 'Sai mật khẩu hiện tại'
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "The given data was invalid.",
+            "errors": {
+              "new_password": [
+                "The new password confirmation does not match."
+              ]
+            }
+          }
+        headers: []
+        description: 'Nhập lại mật khẩu mới không khớp'
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/logout
+    metadata:
+      custom: []
+      groupName: Auth
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Đăng xuất'
+      description: 'Thu hồi (revoke) Bearer token hiện tại của user.'
+      authenticated: true
+      deprecated: false
+    headers:
+      Authorization: 'Bearer {YOUR_AUTH_KEY}'
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Đăng xuất thành công."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 401
+        content: |-
+          {
+            "message": "Unauthenticated."
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth:
+      - headers
+      - Authorization
+      - 'Bearer 6g43cv8PD1aE5beadkZfhV6'
+    controller: null
+    method: null
+    route: null

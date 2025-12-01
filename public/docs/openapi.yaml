@@ -1,0 +1,641 @@
+openapi: 3.0.3
+info:
+  title: 'Ecommerce Product API Documentation'
+  description: ''
+  version: 1.0.0
+servers:
+  -
+    url: ''
+tags:
+  -
+    name: Auth
+    description: ''
+components:
+  securitySchemes:
+    default:
+      type: http
+      scheme: bearer
+      description: 'You can retrieve your token by visiting your dashboard and clicking <b>Generate API token</b>.'
+security:
+  -
+    default: []
+paths:
+  /api/register:
+    post:
+      summary: 'Đăng ký tài khoản'
+      operationId: ngKTiKhon
+      description: "Đăng ký tài khoản mới bằng số điện thoại và mật khẩu.\nSau khi đăng ký, hệ thống sẽ gửi mã OTP đến số điện thoại để xác thực."
+      parameters: []
+      responses:
+        201:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Đăng ký thành công, vui lòng nhập mã OTP được gửi qua SMS để xác thực số điện thoại.'
+                  identifier: '0901234567'
+                properties:
+                  message:
+                    type: string
+                    example: 'Đăng ký thành công, vui lòng nhập mã OTP được gửi qua SMS để xác thực số điện thoại.'
+                  identifier:
+                    type: string
+                    example: '0901234567'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'The given data was invalid.'
+                  errors:
+                    identifier:
+                      - 'The email has already been taken.'
+                    password:
+                      - 'The password confirmation does not match.'
+                properties:
+                  message:
+                    type: string
+                    example: 'The given data was invalid.'
+                  errors:
+                    type: object
+                    properties:
+                      identifier:
+                        type: array
+                        example:
+                          - 'The email has already been taken.'
+                        items:
+                          type: string
+                      password:
+                        type: array
+                        example:
+                          - 'The password confirmation does not match.'
+                        items:
+                          type: string
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                identifier:
+                  type: string
+                  description: 'số điện thoại hoặc email của người dùng. Ví dụ: 0901234567 hoặc test@gmail.com'
+                  example: architecto
+                password:
+                  type: string
+                  description: 'Mật khẩu. Tối thiểu 6 ký tự. Ví dụ: password123'
+                  example: '|]|{+-'
+                password_confirmation:
+                  type: string
+                  description: 'Nhập lại mật khẩu. Phải trùng với password.'
+                  example: architecto
+              required:
+                - identifier
+                - password
+                - password_confirmation
+      security: []
+  /api/verify-otp:
+    post:
+      summary: 'Xác thực OTP'
+      operationId: xcThcOTP
+      description: "Xác thực mã OTP đã gửi tới số điện thoại sau khi đăng ký.\nNếu mã hợp lệ, số điện thoại sẽ được đánh dấu đã xác thực và hệ thống trả về token đăng nhập."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Xác thực thành công.'
+                  token: 1|fFsgvbKc3P3xxxxxxxxxxxxxxxxxxxxx
+                  user:
+                    id: 1
+                    name: 'Nguyen Van A'
+                    phone: '0901234567'
+                    phone_verified_at: '2025-01-01T12:00:00.000000Z'
+                    created_at: '2025-01-01T11:00:00.000000Z'
+                    updated_at: '2025-01-01T11:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Xác thực thành công.'
+                  token:
+                    type: string
+                    example: 1|fFsgvbKc3P3xxxxxxxxxxxxxxxxxxxxx
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'Nguyen Van A'
+                      phone:
+                        type: string
+                        example: '0901234567'
+                      phone_verified_at:
+                        type: string
+                        example: '2025-01-01T12:00:00.000000Z'
+                      created_at:
+                        type: string
+                        example: '2025-01-01T11:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-01-01T11:00:00.000000Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Mã OTP sai'
+                    type: object
+                    example:
+                      message: 'The given data was invalid.'
+                      errors:
+                        code:
+                          - 'Mã OTP không chính xác.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The given data was invalid.'
+                      errors:
+                        type: object
+                        properties:
+                          code:
+                            type: array
+                            example:
+                              - 'Mã OTP không chính xác.'
+                            items:
+                              type: string
+                  -
+                    description: 'Mã OTP hết hạn hoặc đã dùng'
+                    type: object
+                    example:
+                      message: 'The given data was invalid.'
+                      errors:
+                        code:
+                          - 'Mã đã được sử dụng hoặc đã hết hạn.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The given data was invalid.'
+                      errors:
+                        type: object
+                        properties:
+                          code:
+                            type: array
+                            example:
+                              - 'Mã đã được sử dụng hoặc đã hết hạn.'
+                            items:
+                              type: string
+                  -
+                    description: 'Vượt quá số lần nhập mã'
+                    type: object
+                    example:
+                      message: 'The given data was invalid.'
+                      errors:
+                        code:
+                          - 'Bạn đã vượt quá số lần nhập mã cho phép.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The given data was invalid.'
+                      errors:
+                        type: object
+                        properties:
+                          code:
+                            type: array
+                            example:
+                              - 'Bạn đã vượt quá số lần nhập mã cho phép.'
+                            items:
+                              type: string
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                  description: 'Số điện thoại đã đăng ký. Ví dụ: 0901234567'
+                  example: architecto
+                code:
+                  type: string
+                  description: 'Mã OTP gồm 6 chữ số. Ví dụ: 123456'
+                  example: architecto
+              required:
+                - phone
+                - code
+      security: []
+  /api/resend-otp:
+    post:
+      summary: 'Gửi lại mã OTP'
+      operationId: giLiMOTP
+      description: "Gửi lại mã OTP cho số điện thoại đã đăng ký.\nCó giới hạn thời gian giữa các lần gửi (VD: 60 giây)."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Đã gửi lại mã OTP.'
+                  phone: '0901234567'
+                properties:
+                  message:
+                    type: string
+                    example: 'Đã gửi lại mã OTP.'
+                  phone:
+                    type: string
+                    example: '0901234567'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Gửi lại quá sớm'
+                    type: object
+                    example:
+                      message: 'The given data was invalid.'
+                      errors:
+                        phone:
+                          - 'Vui lòng đợi 30 giây nữa trước khi yêu cầu mã mới.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The given data was invalid.'
+                      errors:
+                        type: object
+                        properties:
+                          phone:
+                            type: array
+                            example:
+                              - 'Vui lòng đợi 30 giây nữa trước khi yêu cầu mã mới.'
+                            items:
+                              type: string
+                  -
+                    description: 'Số điện thoại không tồn tại'
+                    type: object
+                    example:
+                      message: 'The given data was invalid.'
+                      errors:
+                        phone:
+                          - 'The selected phone is invalid.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The given data was invalid.'
+                      errors:
+                        type: object
+                        properties:
+                          phone:
+                            type: array
+                            example:
+                              - 'The selected phone is invalid.'
+                            items:
+                              type: string
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                  description: 'Số điện thoại đã đăng ký. Ví dụ: 0901234567'
+                  example: architecto
+              required:
+                - phone
+      security: []
+  /api/login:
+    post:
+      summary: 'Đăng nhập'
+      operationId: ngNhp
+      description: "Đăng nhập bằng số điện thoại và mật khẩu.\nTrả về Bearer Token (Sanctum) để dùng cho các API cần auth."
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Đăng nhập thành công.'
+                  token: 1|fFsgvbKc3P3xxxxxxxxxxxxxxxxxxxxx
+                  user:
+                    id: 1
+                    name: 'Nguyen Van A'
+                    phone: '0901234567'
+                    phone_verified_at: '2025-01-01T12:00:00.000000Z'
+                    created_at: '2025-01-01T11:00:00.000000Z'
+                    updated_at: '2025-01-01T11:00:00.000000Z'
+                properties:
+                  message:
+                    type: string
+                    example: 'Đăng nhập thành công.'
+                  token:
+                    type: string
+                    example: 1|fFsgvbKc3P3xxxxxxxxxxxxxxxxxxxxx
+                  user:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+                      name:
+                        type: string
+                        example: 'Nguyen Van A'
+                      phone:
+                        type: string
+                        example: '0901234567'
+                      phone_verified_at:
+                        type: string
+                        example: '2025-01-01T12:00:00.000000Z'
+                      created_at:
+                        type: string
+                        example: '2025-01-01T11:00:00.000000Z'
+                      updated_at:
+                        type: string
+                        example: '2025-01-01T11:00:00.000000Z'
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      message: 'The given data was invalid.'
+                      errors:
+                        phone:
+                          - 'Thông tin đăng nhập không chính xác.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The given data was invalid.'
+                      errors:
+                        type: object
+                        properties:
+                          phone:
+                            type: array
+                            example:
+                              - 'Thông tin đăng nhập không chính xác.'
+                            items:
+                              type: string
+                  -
+                    description: 'Chưa verify số điện thoại'
+                    type: object
+                    example:
+                      message: 'The given data was invalid.'
+                      errors:
+                        phone:
+                          - 'Số điện thoại chưa được xác thực.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The given data was invalid.'
+                      errors:
+                        type: object
+                        properties:
+                          phone:
+                            type: array
+                            example:
+                              - 'Số điện thoại chưa được xác thực.'
+                            items:
+                              type: string
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phone:
+                  type: string
+                  description: 'Số điện thoại đã đăng ký. Ví dụ: 0901234567'
+                  example: architecto
+                password:
+                  type: string
+                  description: 'Mật khẩu. Ví dụ: password123'
+                  example: '|]|{+-'
+              required:
+                - phone
+                - password
+      security: []
+  /api/me:
+    get:
+      summary: 'Thông tin user hiện tại'
+      operationId: thngTinUserHinTi
+      description: 'Lấy thông tin user tương ứng với Bearer token đang sử dụng.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  id: 1
+                  name: 'Nguyen Van A'
+                  phone: '0901234567'
+                  phone_verified_at: '2025-01-01T12:00:00.000000Z'
+                  created_at: '2025-01-01T11:00:00.000000Z'
+                  updated_at: '2025-01-01T11:00:00.000000Z'
+                properties:
+                  id:
+                    type: integer
+                    example: 1
+                  name:
+                    type: string
+                    example: 'Nguyen Van A'
+                  phone:
+                    type: string
+                    example: '0901234567'
+                  phone_verified_at:
+                    type: string
+                    example: '2025-01-01T12:00:00.000000Z'
+                  created_at:
+                    type: string
+                    example: '2025-01-01T11:00:00.000000Z'
+                  updated_at:
+                    type: string
+                    example: '2025-01-01T11:00:00.000000Z'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Auth
+  /api/change-password:
+    post:
+      summary: 'Đổi mật khẩu'
+      operationId: iMtKhu
+      description: 'Đổi mật khẩu cho user đang đăng nhập.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Đổi mật khẩu thành công.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Đổi mật khẩu thành công.'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        422:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: 'Sai mật khẩu hiện tại'
+                    type: object
+                    example:
+                      message: 'The given data was invalid.'
+                      errors:
+                        current_password:
+                          - 'Mật khẩu hiện tại không đúng.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The given data was invalid.'
+                      errors:
+                        type: object
+                        properties:
+                          current_password:
+                            type: array
+                            example:
+                              - 'Mật khẩu hiện tại không đúng.'
+                            items:
+                              type: string
+                  -
+                    description: 'Nhập lại mật khẩu mới không khớp'
+                    type: object
+                    example:
+                      message: 'The given data was invalid.'
+                      errors:
+                        new_password:
+                          - 'The new password confirmation does not match.'
+                    properties:
+                      message:
+                        type: string
+                        example: 'The given data was invalid.'
+                      errors:
+                        type: object
+                        properties:
+                          new_password:
+                            type: array
+                            example:
+                              - 'The new password confirmation does not match.'
+                            items:
+                              type: string
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                current_password:
+                  type: string
+                  description: 'Mật khẩu hiện tại. Ví dụ: oldpass123'
+                  example: architecto
+                new_password:
+                  type: string
+                  description: 'Mật khẩu mới. Tối thiểu 6 ký tự. Ví dụ: newpass123'
+                  example: architecto
+                new_password_confirmation:
+                  type: string
+                  description: 'Nhập lại mật khẩu mới. Phải trùng với new_password.'
+                  example: architecto
+              required:
+                - current_password
+                - new_password
+                - new_password_confirmation
+  /api/logout:
+    post:
+      summary: 'Đăng xuất'
+      operationId: ngXut
+      description: 'Thu hồi (revoke) Bearer token hiện tại của user.'
+      parameters: []
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: 'Đăng xuất thành công.'
+                properties:
+                  message:
+                    type: string
+                    example: 'Đăng xuất thành công.'
+        401:
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  message: Unauthenticated.
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+      tags:
+        - Auth

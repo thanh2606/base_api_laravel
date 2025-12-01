@@ -1,0 +1,363 @@
+{
+    "variable": [
+        {
+            "id": "baseUrl",
+            "key": "baseUrl",
+            "type": "string",
+            "name": "string",
+            "value": ""
+        }
+    ],
+    "info": {
+        "name": "Ecommerce Product API Documentation",
+        "_postman_id": "0ea35e89-58a8-45d0-8de7-65b22a5059b1",
+        "description": "",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Auth",
+            "description": "",
+            "item": [
+                {
+                    "name": "\u0110\u0103ng k\u00fd t\u00e0i kho\u1ea3n",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/register",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/register"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"phone\":\"architecto\",\"name\":\"architecto\",\"password\":\"|]|{+-\",\"password_confirmation\":\"architecto\"}"
+                        },
+                        "description": "\u0110\u0103ng k\u00fd t\u00e0i kho\u1ea3n m\u1edbi b\u1eb1ng s\u1ed1 \u0111i\u1ec7n tho\u1ea1i v\u00e0 m\u1eadt kh\u1ea9u.\nSau khi \u0111\u0103ng k\u00fd, h\u1ec7 th\u1ed1ng s\u1ebd g\u1eedi m\u00e3 OTP \u0111\u1ebfn s\u1ed1 \u0111i\u1ec7n tho\u1ea1i \u0111\u1ec3 x\u00e1c th\u1ef1c.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 201,
+                            "body": "{\n  \"message\": \"\u0110\u0103ng k\u00fd th\u00e0nh c\u00f4ng, vui l\u00f2ng nh\u1eadp m\u00e3 OTP \u0111\u01b0\u1ee3c g\u1eedi qua SMS \u0111\u1ec3 x\u00e1c th\u1ef1c s\u1ed1 \u0111i\u1ec7n tho\u1ea1i.\",\n  \"phone\": \"0901234567\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"phone\": [\n      \"The phone has already been taken.\"\n    ],\n    \"password\": [\n      \"The password confirmation does not match.\"\n    ]\n  }\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "X\u00e1c th\u1ef1c OTP",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/verify-otp",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/verify-otp"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"phone\":\"architecto\",\"code\":\"architecto\"}"
+                        },
+                        "description": "X\u00e1c th\u1ef1c m\u00e3 OTP \u0111\u00e3 g\u1eedi t\u1edbi s\u1ed1 \u0111i\u1ec7n tho\u1ea1i sau khi \u0111\u0103ng k\u00fd.\nN\u1ebfu m\u00e3 h\u1ee3p l\u1ec7, s\u1ed1 \u0111i\u1ec7n tho\u1ea1i s\u1ebd \u0111\u01b0\u1ee3c \u0111\u00e1nh d\u1ea5u \u0111\u00e3 x\u00e1c th\u1ef1c v\u00e0 h\u1ec7 th\u1ed1ng tr\u1ea3 v\u1ec1 token \u0111\u0103ng nh\u1eadp.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"X\u00e1c th\u1ef1c th\u00e0nh c\u00f4ng.\",\n  \"token\": \"1|fFsgvbKc3P3xxxxxxxxxxxxxxxxxxxxx\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Nguyen Van A\",\n    \"phone\": \"0901234567\",\n    \"phone_verified_at\": \"2025-01-01T12:00:00.000000Z\",\n    \"created_at\": \"2025-01-01T11:00:00.000000Z\",\n    \"updated_at\": \"2025-01-01T11:00:00.000000Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"code\": [\n      \"M\u00e3 OTP kh\u00f4ng ch\u00ednh x\u00e1c.\"\n    ]\n  }\n}",
+                            "name": "M\u00e3 OTP sai"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"code\": [\n      \"M\u00e3 \u0111\u00e3 \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng ho\u1eb7c \u0111\u00e3 h\u1ebft h\u1ea1n.\"\n    ]\n  }\n}",
+                            "name": "M\u00e3 OTP h\u1ebft h\u1ea1n ho\u1eb7c \u0111\u00e3 d\u00f9ng"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"code\": [\n      \"B\u1ea1n \u0111\u00e3 v\u01b0\u1ee3t qu\u00e1 s\u1ed1 l\u1ea7n nh\u1eadp m\u00e3 cho ph\u00e9p.\"\n    ]\n  }\n}",
+                            "name": "V\u01b0\u1ee3t qu\u00e1 s\u1ed1 l\u1ea7n nh\u1eadp m\u00e3"
+                        }
+                    ]
+                },
+                {
+                    "name": "G\u1eedi l\u1ea1i m\u00e3 OTP",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/resend-otp",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/resend-otp"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"phone\":\"architecto\"}"
+                        },
+                        "description": "G\u1eedi l\u1ea1i m\u00e3 OTP cho s\u1ed1 \u0111i\u1ec7n tho\u1ea1i \u0111\u00e3 \u0111\u0103ng k\u00fd.\nC\u00f3 gi\u1edbi h\u1ea1n th\u1eddi gian gi\u1eefa c\u00e1c l\u1ea7n g\u1eedi (VD: 60 gi\u00e2y).",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"\u0110\u00e3 g\u1eedi l\u1ea1i m\u00e3 OTP.\",\n  \"phone\": \"0901234567\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"phone\": [\n      \"Vui l\u00f2ng \u0111\u1ee3i 30 gi\u00e2y n\u1eefa tr\u01b0\u1edbc khi y\u00eau c\u1ea7u m\u00e3 m\u1edbi.\"\n    ]\n  }\n}",
+                            "name": "G\u1eedi l\u1ea1i qu\u00e1 s\u1edbm"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"phone\": [\n      \"The selected phone is invalid.\"\n    ]\n  }\n}",
+                            "name": "S\u1ed1 \u0111i\u1ec7n tho\u1ea1i kh\u00f4ng t\u1ed3n t\u1ea1i"
+                        }
+                    ]
+                },
+                {
+                    "name": "\u0110\u0103ng nh\u1eadp",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/login",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/login"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"phone\":\"architecto\",\"password\":\"|]|{+-\"}"
+                        },
+                        "description": "\u0110\u0103ng nh\u1eadp b\u1eb1ng s\u1ed1 \u0111i\u1ec7n tho\u1ea1i v\u00e0 m\u1eadt kh\u1ea9u.\nTr\u1ea3 v\u1ec1 Bearer Token (Sanctum) \u0111\u1ec3 d\u00f9ng cho c\u00e1c API c\u1ea7n auth.",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"\u0110\u0103ng nh\u1eadp th\u00e0nh c\u00f4ng.\",\n  \"token\": \"1|fFsgvbKc3P3xxxxxxxxxxxxxxxxxxxxx\",\n  \"user\": {\n    \"id\": 1,\n    \"name\": \"Nguyen Van A\",\n    \"phone\": \"0901234567\",\n    \"phone_verified_at\": \"2025-01-01T12:00:00.000000Z\",\n    \"created_at\": \"2025-01-01T11:00:00.000000Z\",\n    \"updated_at\": \"2025-01-01T11:00:00.000000Z\"\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"phone\": [\n      \"Th\u00f4ng tin \u0111\u0103ng nh\u1eadp kh\u00f4ng ch\u00ednh x\u00e1c.\"\n    ]\n  }\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"phone\": [\n      \"S\u1ed1 \u0111i\u1ec7n tho\u1ea1i ch\u01b0a \u0111\u01b0\u1ee3c x\u00e1c th\u1ef1c.\"\n    ]\n  }\n}",
+                            "name": "Ch\u01b0a verify s\u1ed1 \u0111i\u1ec7n tho\u1ea1i"
+                        }
+                    ]
+                },
+                {
+                    "name": "Th\u00f4ng tin user hi\u1ec7n t\u1ea1i",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/me",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/me"
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "L\u1ea5y th\u00f4ng tin user t\u01b0\u01a1ng \u1ee9ng v\u1edbi Bearer token \u0111ang s\u1eed d\u1ee5ng."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"id\": 1,\n  \"name\": \"Nguyen Van A\",\n  \"phone\": \"0901234567\",\n  \"phone_verified_at\": \"2025-01-01T12:00:00.000000Z\",\n  \"created_at\": \"2025-01-01T11:00:00.000000Z\",\n  \"updated_at\": \"2025-01-01T11:00:00.000000Z\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                },
+                {
+                    "name": "\u0110\u1ed5i m\u1eadt kh\u1ea9u",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/change-password",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/change-password"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"current_password\":\"architecto\",\"new_password\":\"architecto\",\"new_password_confirmation\":\"architecto\"}"
+                        },
+                        "description": "\u0110\u1ed5i m\u1eadt kh\u1ea9u cho user \u0111ang \u0111\u0103ng nh\u1eadp."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"\u0110\u1ed5i m\u1eadt kh\u1ea9u th\u00e0nh c\u00f4ng.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"current_password\": [\n      \"M\u1eadt kh\u1ea9u hi\u1ec7n t\u1ea1i kh\u00f4ng \u0111\u00fang.\"\n    ]\n  }\n}",
+                            "name": "Sai m\u1eadt kh\u1ea9u hi\u1ec7n t\u1ea1i"
+                        },
+                        {
+                            "header": [],
+                            "code": 422,
+                            "body": "{\n  \"message\": \"The given data was invalid.\",\n  \"errors\": {\n    \"new_password\": [\n      \"The new password confirmation does not match.\"\n    ]\n  }\n}",
+                            "name": "Nh\u1eadp l\u1ea1i m\u1eadt kh\u1ea9u m\u1edbi kh\u00f4ng kh\u1edbp"
+                        }
+                    ]
+                },
+                {
+                    "name": "\u0110\u0103ng xu\u1ea5t",
+                    "request": {
+                        "url": {
+                            "host": "{{baseUrl}}",
+                            "path": "api\/logout",
+                            "query": [],
+                            "raw": "{{baseUrl}}\/api\/logout"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application\/json"
+                            }
+                        ],
+                        "body": null,
+                        "description": "Thu h\u1ed3i (revoke) Bearer token hi\u1ec7n t\u1ea1i c\u1ee7a user."
+                    },
+                    "response": [
+                        {
+                            "header": [],
+                            "code": 200,
+                            "body": "{\n  \"message\": \"\u0110\u0103ng xu\u1ea5t th\u00e0nh c\u00f4ng.\"\n}",
+                            "name": ""
+                        },
+                        {
+                            "header": [],
+                            "code": 401,
+                            "body": "{\n  \"message\": \"Unauthenticated.\"\n}",
+                            "name": ""
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "Authorization",
+                "type": "string"
+            }
+        ]
+    }
+}

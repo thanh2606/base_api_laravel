@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->timestamp('phone_verified_at')->nullable();
+            $table->string('email')->nullable()->change();
+            $table->string('name')->nullable()->change();
         });
     }
 
@@ -23,6 +25,8 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('phone_verified_at');
+            $table->string('email')->unique()->change();
+            $table->string('name')->change();
         });
     }
 };
